@@ -28,19 +28,40 @@ public class Program {
 
             System.out.println("Course created");
             session.getTransaction().commit();
-            session.close();
 
             // считываем и выводим в консоль данные
             session = sessionFactory.getCurrentSession();
             session.beginTransaction();
-
             ArrayList<Course> retrievedCourses = new ArrayList<>();
             System.out.println("Retrieved courses from DB:");
-            for (int i = 0; i < 10; i++) {
+            for (int i = 1; i <= 10; i++) {
                 Course course = session.get(Course.class, i);
                 System.out.println(course);
+                retrievedCourses.add(course);
             }
+            session.getTransaction().commit();
 
+            // Обновление данных
+            session = sessionFactory.getCurrentSession();
+            session.beginTransaction();
+            for (Course course : retrievedCourses) {
+                course.setTitle("Изменили название");
+                course.setDuration(0.1);
+                System.out.println("Изменили - " + course);
+                session.update(course);
+            }
+            session.getTransaction().commit();
+            System.out.println("Course updated");
+
+
+            // Удаляем всё
+            session = sessionFactory.getCurrentSession();
+            session.beginTransaction();
+            for (Course course : retrievedCourses) {
+                session.delete(course);
+            }
+            session.getTransaction().commit();
+            System.out.println("Courses deleted");
 
         }
 
