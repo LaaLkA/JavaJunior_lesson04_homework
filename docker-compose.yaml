@@ -1,0 +1,28 @@
+version: '1.0'
+
+services:
+  homework:
+    image: ${DOCKER_REGISTRY-}homework-lesson4
+    container_name: Courses.app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - default_network
+
+  coursesDB:
+    image: mysql:latest
+    container_name: courses.db
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_DATABASE=coursesDB
+    volumes:
+      - ./.containers/database:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - default_network
+
+networks:
+  default_network:
+    driver: bridge
